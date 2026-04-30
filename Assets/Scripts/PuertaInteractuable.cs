@@ -5,7 +5,7 @@ using UnityEngine;
 public class PuertaInteractuable : MonoBehaviour
 {
     [Header("Configuración de la Puerta")]
-    public float costePuerta = 750f; // Puedes cambiar esto en el Inspector para cada puerta
+    public float costePuerta; // Puedes cambiar esto en el Inspector para cada puerta
     public bool estaAbierta = false; // Ahora es pública para que el jugador la lea
     
     private Animator anim;
@@ -23,5 +23,10 @@ public class PuertaInteractuable : MonoBehaviour
         
         // Le pasamos el valor al parámetro del Animator
         anim.SetBool("estaAbierta", estaAbierta);
+        BoxCollider colliderInteraccion = GetComponent<BoxCollider>();
+        if (colliderInteraccion != null)
+        {
+            colliderInteraccion.enabled = false;
+        }
     }
 }

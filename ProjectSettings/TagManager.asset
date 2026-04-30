@@ -7,7 +7,7 @@ TagManager:
   - Target
   - Wall
   - Puerta
-  - Puertas
+  - Coleccionable
   layers:
   - Default
   - TransparentFX
