@@ -6,7 +6,7 @@ public class PuntuacionManager : MonoBehaviour
     public static PuntuacionManager instance;
 
     [Header("Sistema de Puntos")]
-    public static float puntos = 10000f; // Los puntos REALES que tienes
+    public float puntos = 10000f; // Los puntos REALES que tienes
     private float puntosMostrados; // Los puntos VISUALES que se están animando
 
     [Header("Interfaz y Animación")]

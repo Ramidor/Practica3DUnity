@@ -6857,6 +6857,47 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1291821140}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1349310081 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8604367122496853544, guid: beef3bcde1610f04aa96275436147bb9,
+    type: 3}
+  m_PrefabInstance: {fileID: 8606311150561899606}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1349310086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1349310081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d0bc3071b7487d4b8f92df1c38aed78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  costePuerta: 10000
+  estaAbierta: 0
+--- !u!65 &1349310087
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1349310081}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.1135168, y: 2.9102468, z: 0.157323}
+  m_Center: {x: -0.0061544776, y: 1.4362185, z: 0.0213675}
 --- !u!1 &1375134097
 GameObject:
   m_ObjectHideFlags: 0
@@ -10890,6 +10931,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 5.513
       objectReference: {fileID: 0}
+    - target: {fileID: 8604367122496853544, guid: beef3bcde1610f04aa96275436147bb9,
+        type: 3}
+      propertyPath: m_TagString
+      value: PuertaFinal
+      objectReference: {fileID: 0}
     - target: {fileID: 8604725143090690082, guid: beef3bcde1610f04aa96275436147bb9,
         type: 3}
       propertyPath: m_TagString
@@ -10981,6 +11027,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 63211184}
+    - targetCorrespondingSourceObject: {fileID: 8604367122496853544, guid: beef3bcde1610f04aa96275436147bb9,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1349310087}
+    - targetCorrespondingSourceObject: {fileID: 8604367122496853544, guid: beef3bcde1610f04aa96275436147bb9,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1349310086}
     - targetCorrespondingSourceObject: {fileID: 8604434553400904168, guid: beef3bcde1610f04aa96275436147bb9,
         type: 3}
       insertIndex: -1

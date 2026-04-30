@@ -4,8 +4,8 @@ using UnityEngine;
 
 [System.Serializable]
 public class PlayerScore {
-    public string playerName;
-    public int score;
+    public string nombre;
+    public float puntos;
 }
 
 [System.Serializable]

@@ -14,7 +14,7 @@ public class PlayerInteract : MonoBehaviour
     [Header("Interfaz de Usuario (UI)")]
     public TextMeshProUGUI textoInteraccion;
 
-void Update()
+    void Update()
     {
         textoInteraccion.text = "";
 
@@ -54,6 +54,20 @@ void Update()
                     }
                 }
             }
+            else if (hit.collider.CompareTag("PuertaFinal"))
+            {
+                PuertaInteractuable scriptPuerta = hit.collider.GetComponent<PuertaInteractuable>();
+
+                if (scriptPuerta != null && !scriptPuerta.estaAbierta)
+                {
+                    textoInteraccion.text = "Pulsar [E] para abrir puerta [" + scriptPuerta.costePuerta + "] y terminar partida";
+
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        IntentarComprarPuertaFinal(scriptPuerta);
+                    }
+                }
+            }
         }
     }
 
@@ -66,6 +80,23 @@ void Update()
             // Borramos el texto y abrimos la puerta
             textoInteraccion.text = "";
             scriptPuerta.AlternarPuerta();
+        }
+        else
+        {
+            Debug.Log("No tienes suficientes puntos.");
+        }
+    }
+
+    void IntentarComprarPuertaFinal(PuertaInteractuable scriptPuerta)
+    {
+        // Aquí ocurre la magia del Singleton. Llamamos a PuntuacionManager.instance
+        // Si GastarPuntos devuelve true, significa que teníamos el dinero y ya nos lo ha cobrado.
+        if (PuntuacionManager.instance.GastarPuntos(scriptPuerta.costePuerta))
+        {
+            // Borramos el texto y abrimos la puerta
+            textoInteraccion.text = "Salida desbloqueada. ¡Enhorabuena por terminar la partida!";
+            PlayerPrefs.SetFloat("PuntosFinales", PuntuacionManager.instance.puntos);
+            scriptPuerta.TerminarPartida();
         }
         else
         {
