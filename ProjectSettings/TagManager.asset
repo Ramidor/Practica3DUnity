@@ -9,6 +9,8 @@ TagManager:
   - Puerta
   - Coleccionable
   - PuertaFinal
+  - PanelMain
+  - Configuracion
   layers:
   - Default
   - TransparentFX
