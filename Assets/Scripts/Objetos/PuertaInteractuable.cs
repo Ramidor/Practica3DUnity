@@ -11,6 +11,9 @@ public class PuertaInteractuable : MonoBehaviour
     
     private Animator anim;
 
+    [Header("Sonidos")]
+    public AudioSource audioSourceJugador; // El altavoz
+    public AudioClip sonidoAbrir; // El clip de sonido para abrir la puerta
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -29,6 +32,11 @@ public class PuertaInteractuable : MonoBehaviour
         {
             colliderInteraccion.enabled = false;
         }
+    
+            if (audioSourceJugador != null && sonidoAbrir != null)
+            {
+                audioSourceJugador.PlayOneShot(sonidoAbrir);
+            }
     }
     public void TerminarPartida()
     {

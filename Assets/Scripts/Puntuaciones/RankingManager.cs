@@ -59,7 +59,7 @@ public class RankingManager : MonoBehaviour
         miRanking.scores.Add(new PlayerScore { nombre = nombreJugador, puntos = puntosParaGuardar });
         
         // Ordenar de mayor a menor y quedarse con los 10 mejores
-        miRanking.scores = miRanking.scores.OrderByDescending(x => x.puntos).Take(10).ToList();
+        miRanking.scores = miRanking.scores.OrderByDescending(x => x.puntos).Take(8).ToList();
 
         // Guardar el JSON actualizado
         string nuevoJson = JsonUtility.ToJson(miRanking);
@@ -76,7 +76,7 @@ public class RankingManager : MonoBehaviour
             string json = File.ReadAllText(rutaArchivo);
             RankingData datos = JsonUtility.FromJson<RankingData>(json);
 
-            string textoRanking = "TOP 10 RANKING:\n\n";
+            string textoRanking = "TOP 8 RANKING:\n\n";
             int posicion = 1;
             
             foreach (var entrada in datos.scores)

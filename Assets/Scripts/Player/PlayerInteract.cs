@@ -14,6 +14,10 @@ public class PlayerInteract : MonoBehaviour
     [Header("Interfaz de Usuario (UI)")]
     public TextMeshProUGUI textoInteraccion;
 
+    [Header("Sonidos")]
+    public AudioSource audioSourceJugador; // El altavoz
+    public AudioClip sonidoErrorPuntos; // El clip de sonido para el error de puntos
+
     void Update()
     {
         textoInteraccion.text = "";
@@ -84,6 +88,10 @@ public class PlayerInteract : MonoBehaviour
         else
         {
             Debug.Log("No tienes suficientes puntos.");
+            if (audioSourceJugador != null && sonidoErrorPuntos != null)
+            {
+                audioSourceJugador.PlayOneShot(sonidoErrorPuntos);
+            }
         }
     }
 
@@ -101,6 +109,11 @@ public class PlayerInteract : MonoBehaviour
         else
         {
             Debug.Log("No tienes suficientes puntos.");
+            if (audioSourceJugador != null && sonidoErrorPuntos != null)
+            {
+                audioSourceJugador.PlayOneShot(sonidoErrorPuntos);
+            }
+            
         }
     }
 }
