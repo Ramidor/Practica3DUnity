@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 160662986439047801}
   - component: {fileID: 1049396039009783920}
   - component: {fileID: 7016299481880795668}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 3001004458704975899}
   - component: {fileID: 3776267652536432514}
   - component: {fileID: 2465710278986017746}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MuzzleFlashEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4881,7 +4881,7 @@ GameObject:
   - component: {fileID: 263189790243745422}
   - component: {fileID: 388286795604936588}
   - component: {fileID: 8708645684117674081}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: AK74
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4988,7 +4988,7 @@ MonoBehaviour:
   isReloading: 0
   spawnPosition: {x: 0.2, y: 1.43, z: 0.77}
   spawnRotation: {x: 0, y: 180, z: 0}
-  weaponType: 1
+  thisWeaponType: 1
   currentShootingMode: 2
 --- !u!95 &263189790243745422
 Animator:
@@ -5061,7 +5061,7 @@ GameObject:
   - component: {fileID: 6512037368448645664}
   - component: {fileID: 533003393081918596}
   - component: {fileID: 3853988193879446306}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Bolt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5142,7 +5142,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5283179533161578319}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BulletSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5176,7 +5176,7 @@ GameObject:
   - component: {fileID: 8406993653243267931}
   - component: {fileID: 6810495039317304976}
   - component: {fileID: 3653020739016031135}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Mag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
