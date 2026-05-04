@@ -11,6 +11,9 @@ TagManager:
   - PuertaFinal
   - PanelMain
   - Configuracion
+  - Zombie
+  - Waypoints
+  - ZombieHand
   layers:
   - Default
   - TransparentFX
