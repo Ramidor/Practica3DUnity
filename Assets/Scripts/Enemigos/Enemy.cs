@@ -40,6 +40,7 @@ public class Enemy : MonoBehaviour
             }
             zombieChannel.PlayOneShot(zombieDeath);
              GetComponent<Collider>().enabled = false; // Desactiva el collider para evitar más colisiones
+            PuntuacionManager.instance.SumarPuntos(100f);
 
             Destroy(gameObject, 4f); // Destruye el objeto después de 4 segundos para que la animación de muerte se reproduzca
         }
