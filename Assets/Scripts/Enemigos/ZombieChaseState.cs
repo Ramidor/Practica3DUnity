@@ -5,8 +5,9 @@ using UnityEngine.AI;
 
 public class ZombieChaseState : StateMachineBehaviour
 {
-NavMeshAgent agent;
+    NavMeshAgent agent;
     Transform player;
+    Enemy enemy;
 
     public float chaseSpeed = 6f;
     public float stopChasingDistance = 21f;
@@ -14,6 +15,7 @@ NavMeshAgent agent;
      override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         agent = animator.GetComponent<NavMeshAgent>();
+        enemy = animator.GetComponent<Enemy>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         agent.speed = chaseSpeed;
        
@@ -22,6 +24,12 @@ NavMeshAgent agent;
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        if (enemy != null && enemy.zombieChannel != null && enemy.zombieChannel.isPlaying == false)
+        {
+            enemy.zombieChannel.clip = enemy.zombieChase;
+            enemy.zombieChannel.PlayOneShot(enemy.zombieChase);
+        }
+
        agent.SetDestination(player.position);
        animator.transform.LookAt(player);
 
@@ -40,6 +48,7 @@ NavMeshAgent agent;
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         agent.SetDestination(agent.transform.position);
+        enemy.zombieChannel.Stop();
        
     }
 }

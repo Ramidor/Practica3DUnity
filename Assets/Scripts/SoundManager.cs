@@ -8,7 +8,7 @@ public class SoundManager : MonoBehaviour
     public static SoundManager Instance { get; private set; }
 
     public AudioSource shootingChannel;
-    
+
     public AudioClip M1911Shot;
     public AudioClip AK74Shot;
 
@@ -16,9 +16,24 @@ public class SoundManager : MonoBehaviour
 
     public AudioClip reloadingSoundM1911;
     public AudioClip reloadingSoundAK74;
-    
+
     public AudioSource emptySoundM1911;
 
+<<<<<<< Updated upstream
+=======
+
+    public AudioSource throwablesChannel;
+    public AudioClip grenadeThrowSound;
+
+
+    public AudioClip zombieWalking;
+    public AudioClip zombieDeath;
+    public AudioClip zombieAttack;
+    public AudioClip zombieHurt;
+    public AudioClip zombieChase;
+
+    public AudioSource zombieChannel;
+>>>>>>> Stashed changes
     private void Awake()
     {
         if (Instance == null)

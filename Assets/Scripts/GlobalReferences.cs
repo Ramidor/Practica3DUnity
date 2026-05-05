@@ -10,6 +10,8 @@ public class GlobalReferences : MonoBehaviour
     public GameObject bulletImpactEffectPrefab;
     public TextMeshProUGUI ammoCounterText;
 
+    public GameObject sangreEffect;
+
     private void Awake()
     {
         if (Instance == null)
