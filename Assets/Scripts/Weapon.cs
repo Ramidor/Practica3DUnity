@@ -7,6 +7,7 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     public bool isActiveWeapon;
+    public int weaponDamage;
 
     [Header("Shooting")]
     // Shooting control variables
@@ -79,6 +80,12 @@ public class Weapon : MonoBehaviour
     {   
         if(isActiveWeapon)
         {
+            foreach (Transform child in transform)
+            {
+                child.gameObject.layer = LayerMask.NameToLayer("WeaponRender");
+            }
+
+
             if (Input.GetMouseButtonDown(1))
             {
                 EnterADS();
@@ -125,6 +132,13 @@ public class Weapon : MonoBehaviour
                 FireWeapon();
             }
         }
+        else
+        {
+            foreach (Transform child in transform)
+            {
+                child.gameObject.layer = LayerMask.NameToLayer("Default");
+            }
+        }
     }
 
     public void EnterADS(){
@@ -164,6 +178,9 @@ public class Weapon : MonoBehaviour
         
         // Instantiate the bullet and apply force to it
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
+
+        Bullet bul = bullet.GetComponent<Bullet>();
+        bul.bulletDamage = weaponDamage;
 
         // Poiting the bullet in the shooting direction
         bullet.transform.forward = shootingDirection;

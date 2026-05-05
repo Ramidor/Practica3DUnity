@@ -19,6 +19,10 @@ public class SoundManager : MonoBehaviour
     
     public AudioSource emptySoundM1911;
 
+
+    public AudioSource throwablesChannel;
+    public AudioClip grenadeThrowSound;
+
     private void Awake()
     {
         if (Instance == null)
