@@ -11,11 +11,14 @@ public class SoundManager : MonoBehaviour
 
     public AudioClip M1911Shot;
     public AudioClip AK74Shot;
+    public AudioClip ShotgunShot;
+
 
     public AudioSource reloadingChannel;
 
     public AudioClip reloadingSoundM1911;
     public AudioClip reloadingSoundAK74;
+    public AudioClip reloadingSoundShotgun;
 
     public AudioSource emptySoundM1911;
 
@@ -56,6 +59,9 @@ public class SoundManager : MonoBehaviour
             case WeaponType.Rifle:
                 shootingChannel.PlayOneShot(AK74Shot);
                 break;
+            case WeaponType.Shotgun:
+                shootingChannel.PlayOneShot(ShotgunShot);
+                break;
         }
     }
 
@@ -68,6 +74,9 @@ public class SoundManager : MonoBehaviour
                 break;
             case WeaponType.Rifle:
                 reloadingChannel.PlayOneShot(reloadingSoundAK74);
+                break;
+            case WeaponType.Shotgun:
+                reloadingChannel.PlayOneShot(reloadingSoundShotgun);
                 break;
         }
     }

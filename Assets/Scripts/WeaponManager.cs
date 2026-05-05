@@ -14,6 +14,7 @@ public class WeaponManager : MonoBehaviour
     [Header("Ammo")]
     public int totalRifleAmmo = 0;
     public int totalPistolAmmo = 0;
+    public int totalShotgunAmmo = 0;
 
 
     [Header("Throwables")]
@@ -94,19 +95,6 @@ public class WeaponManager : MonoBehaviour
     public void PickUpWeapon(GameObject pickedWeapon)
     {
         AddWeaponIntoActiveSlot(pickedWeapon);
-    }
-
-    internal void PickUpAmmo(AmmoBox ammo)
-    {
-        switch (ammo.ammoType)
-        {
-            case AmmoBox.AmmoType.PistolAmmo:
-                totalPistolAmmo += ammo.ammoAmount;
-                break;
-            case AmmoBox.AmmoType.RifleAmmo:
-                totalRifleAmmo += ammo.ammoAmount;
-                break;
-        }
     }
 
     private void AddWeaponIntoActiveSlot(GameObject pickedWeapon)
@@ -200,6 +188,23 @@ public class WeaponManager : MonoBehaviour
 #endregion
     
 #region || ---- Ammo ---- ||
+
+    internal void PickUpAmmo(AmmoBox ammo)
+    {
+        switch (ammo.ammoType)
+        {
+            case AmmoBox.AmmoType.PistolAmmo:
+                totalPistolAmmo += ammo.ammoAmount;
+                break;
+            case AmmoBox.AmmoType.RifleAmmo:
+                totalRifleAmmo += ammo.ammoAmount;
+                break;
+            case AmmoBox.AmmoType.ShotgunAmmo:
+                totalShotgunAmmo += ammo.ammoAmount;
+                break;
+        }
+    }
+
     internal void DecreaseTotalAmmo(int bulletsToDecrease, Weapon.WeaponType thisWeaponType)
     {
         switch (thisWeaponType)
@@ -209,6 +214,9 @@ public class WeaponManager : MonoBehaviour
                 break;
             case Weapon.WeaponType.Rifle:
                 totalRifleAmmo -= bulletsToDecrease;
+                break;
+            case Weapon.WeaponType.Shotgun:
+                totalShotgunAmmo -= bulletsToDecrease;
                 break;
         }
     }
@@ -221,6 +229,8 @@ public class WeaponManager : MonoBehaviour
                 return totalPistolAmmo;
             case Weapon.WeaponType.Rifle:
                 return totalRifleAmmo;
+            case Weapon.WeaponType.Shotgun:
+                return totalShotgunAmmo;
             default:
                 return 0;
         }
