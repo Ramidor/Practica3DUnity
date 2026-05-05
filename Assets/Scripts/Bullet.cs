@@ -35,9 +35,9 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
 
-            Destroy(gameObject);
-        }
+        Destroy(gameObject);
     }
+
 
     private void CreateBulletImpactEffect(Collision objectWeHit)
     {
@@ -47,10 +47,18 @@ public class Bullet : MonoBehaviour
 
         hole.transform.SetParent(objectWeHit.transform);
 
-        
+
     }
-    
-}
+
+    private void CreateBloodEffect(Collision objectWeHit)
+    {
+        ContactPoint contact = objectWeHit.contacts[0];
+
+        GameObject bloodEffect = Instantiate(GlobalReferences.Instance.sangreEffect, contact.point, Quaternion.LookRotation(contact.normal));
+
+        bloodEffect.transform.SetParent(objectWeHit.transform);
+
+    }
 
 }
 
