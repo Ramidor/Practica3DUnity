@@ -76,6 +76,16 @@ public class Throwable : MonoBehaviour
             }
 
             //Add damage to nearby objects here if they have a health component
+            if(nearbyObject.gameObject.GetComponent<Enemy>() != null)
+            {
+                Enemy enemy = nearbyObject.gameObject.GetComponent<Enemy>();
+                enemy.RecibirDaño(75); // Example damage value
+            }
+            else if (nearbyObject.gameObject.GetComponent<Player>() != null)
+            {
+                Player player = nearbyObject.gameObject.GetComponent<Player>();
+                player.RecibirDaño(75); // Example damage value
+            }
         }
     }
 }

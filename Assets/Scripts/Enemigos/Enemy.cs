@@ -8,6 +8,15 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int HP = 100;
     private Animator animator;
     private NavMeshAgent navAgent;
+
+    public AudioClip zombieWalking;
+    public AudioClip zombieDeath;
+    public AudioClip zombieAttack;
+    public AudioClip zombieHurt;
+    public AudioClip zombieChase;
+
+    public AudioSource zombieChannel;
+    public AudioSource zombieChannel2;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,12 +38,15 @@ public class Enemy : MonoBehaviour
             {
                 animator.SetTrigger("Morir2");
             }
+            zombieChannel.PlayOneShot(zombieDeath);
+             GetComponent<Collider>().enabled = false; // Desactiva el collider para evitar más colisiones
 
-            Destroy(gameObject, 3f); // Destruye el objeto después de 3 segundos para que la animación de muerte se reproduzca
+            Destroy(gameObject, 4f); // Destruye el objeto después de 4 segundos para que la animación de muerte se reproduzca
         }
         else
         {
             animator.SetTrigger("RecibirDaño");
+            zombieChannel2.PlayOneShot(zombieHurt);
         }
     }
     private void OnDrawGizmosSelected()

@@ -10,6 +10,7 @@ public class ZombieWalkingState : StateMachineBehaviour
     public float walkTime = 10f;
     Transform player;
     NavMeshAgent agent;
+    Enemy enemy;
 
     public float detectionRange = 18f;
     public float patrolSpeed = 2f;
@@ -21,6 +22,7 @@ public class ZombieWalkingState : StateMachineBehaviour
         timer = 0f;
         player = GameObject.FindGameObjectWithTag("Player").transform;
         agent = animator.GetComponent<NavMeshAgent>();
+        enemy = animator.GetComponent<Enemy>();
         agent.speed = patrolSpeed;
 
         patrolPoints.Clear();
@@ -38,6 +40,11 @@ public class ZombieWalkingState : StateMachineBehaviour
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
 
+        if (enemy != null && enemy.zombieChannel != null && enemy.zombieChannel.isPlaying == false)
+        {
+            enemy.zombieChannel.clip = enemy.zombieWalking;
+            enemy.zombieChannel.PlayOneShot(enemy.zombieWalking);
+        }
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
             agent.SetDestination(patrolPoints[Random.Range(0, patrolPoints.Count)].position);
@@ -61,6 +68,7 @@ public class ZombieWalkingState : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         agent.SetDestination(agent.transform.position);
+        enemy.zombieChannel.Stop();
 
 
     }

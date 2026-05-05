@@ -30,6 +30,11 @@ public class Bullet : MonoBehaviour
             print("hit " + collision.gameObject.name);
             collision.gameObject.GetComponent<Enemy>().RecibirDaño(bulletDamage);
 
+            CreateBloodEffect(collision);
+
+            Destroy(gameObject);
+        }
+
             Destroy(gameObject);
         }
     }
@@ -46,3 +51,6 @@ public class Bullet : MonoBehaviour
     }
     
 }
+
+}
+

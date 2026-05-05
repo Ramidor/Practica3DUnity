@@ -11,6 +11,8 @@ public class GlobalReferences : MonoBehaviour
 
     public GameObject granadeExplosionEffect;
 
+    public GameObject sangreEffect;
+
     private void Awake()
     {
         if (Instance == null)

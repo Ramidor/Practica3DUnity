@@ -7,6 +7,7 @@ public class ZombieAttackState : StateMachineBehaviour
 {
     Transform player;
     NavMeshAgent agent;
+    Enemy enemy;
       
         public float stopAttackingDistance = 3f;
 
@@ -14,12 +15,19 @@ public class ZombieAttackState : StateMachineBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         agent = animator.GetComponent<NavMeshAgent>();
+        enemy = animator.GetComponent<Enemy>();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
      
+
+        if (enemy != null && enemy.zombieChannel != null && enemy.zombieChannel.isPlaying == false)
+        {
+            enemy.zombieChannel.clip = enemy.zombieAttack;
+            enemy.zombieChannel.PlayOneShot(enemy.zombieAttack);
+        }
         LookAtPlayer();
          float distanceToPlayer = Vector3.Distance(player.position, animator.transform.position);
         if (distanceToPlayer >= stopAttackingDistance)
@@ -38,5 +46,10 @@ public class ZombieAttackState : StateMachineBehaviour
        var yRotation = agent.transform.rotation.eulerAngles.y;
          agent.transform.rotation = Quaternion.Euler(0, yRotation, 0);
 
+    }
+
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        enemy.zombieChannel.Stop();
     }
 }
