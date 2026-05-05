@@ -19,11 +19,10 @@ public class SoundManager : MonoBehaviour
 
     public AudioSource emptySoundM1911;
 
-<<<<<<< Updated upstream
-=======
 
     public AudioSource throwablesChannel;
     public AudioClip grenadeThrowSound;
+
 
 
     public AudioClip zombieWalking;
@@ -33,7 +32,7 @@ public class SoundManager : MonoBehaviour
     public AudioClip zombieChase;
 
     public AudioSource zombieChannel;
->>>>>>> Stashed changes
+
     private void Awake()
     {
         if (Instance == null)

@@ -10,6 +10,21 @@ public class WeaponManager : MonoBehaviour
     public List<GameObject> weaponsSlots;
 
     public GameObject activeWeaponSlot;
+
+    [Header("Ammo")]
+    public int totalRifleAmmo = 0;
+    public int totalPistolAmmo = 0;
+
+
+    [Header("Throwables")]
+    public int grenades = 0;
+    public float throwForce = 10f;
+    public GameObject grenadePrefab;
+    public GameObject throwableSpawn;
+    public float forceMultiplier = 0;
+    public float maxForceMultiplier = 2f;
+
+
     private void Awake()
     {
         if (Instance == null)
@@ -50,11 +65,48 @@ public class WeaponManager : MonoBehaviour
         {
             SwitchActiveSlot(1);
         }
+
+        if (Input.GetKey(KeyCode.G))
+        {
+            forceMultiplier += Time.deltaTime;
+
+            if (forceMultiplier > maxForceMultiplier)
+            {
+                forceMultiplier = maxForceMultiplier;
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.G))
+        {
+            if (grenades > 0)
+            {
+                ThrowLethal();
+            }
+
+            forceMultiplier = 0;
+        }
+
+
     }
 
+
+#region  || ---- Weapon ---- ||
     public void PickUpWeapon(GameObject pickedWeapon)
     {
         AddWeaponIntoActiveSlot(pickedWeapon);
+    }
+
+    internal void PickUpAmmo(AmmoBox ammo)
+    {
+        switch (ammo.ammoType)
+        {
+            case AmmoBox.AmmoType.PistolAmmo:
+                totalPistolAmmo += ammo.ammoAmount;
+                break;
+            case AmmoBox.AmmoType.RifleAmmo:
+                totalRifleAmmo += ammo.ammoAmount;
+                break;
+        }
     }
 
     private void AddWeaponIntoActiveSlot(GameObject pickedWeapon)
@@ -104,4 +156,75 @@ public class WeaponManager : MonoBehaviour
         }
 
     }
+
+#endregion
+
+#region || ---- Throwables ---- ||
+    public void PickUpThrowable(Throwable throwable)
+    {
+        switch (throwable.throwableType)
+        {
+            case Throwable.ThrowableType.Grenade:
+                PickUpGrenade();
+                break;
+        }
+    }
+
+
+    private void PickUpGrenade()
+    {
+        if (grenades < 5)
+        {
+            grenades += 1;
+            Destroy(InteractionManager.Instance.hoverThrowable.gameObject);
+            HUDManager.Instance.UpdateThrowables(Throwable.ThrowableType.Grenade);
+        }
+    }
+
+    private void ThrowLethal()
+    {
+        GameObject lethalPrefab = grenadePrefab;
+
+        GameObject throwable = Instantiate(lethalPrefab, throwableSpawn.transform.position, throwableSpawn.transform.rotation);
+        Rigidbody rb = throwable.GetComponent<Rigidbody>();
+
+        rb.AddForce(Camera.main.transform.forward * (throwForce  * forceMultiplier), ForceMode.VelocityChange);
+
+        throwable.GetComponent<Throwable>().hasBeenThrown = true;
+
+        grenades -= 1;
+        
+        HUDManager.Instance.UpdateThrowables(Throwable.ThrowableType.Grenade);
+    }
+
+#endregion
+    
+#region || ---- Ammo ---- ||
+    internal void DecreaseTotalAmmo(int bulletsToDecrease, Weapon.WeaponType thisWeaponType)
+    {
+        switch (thisWeaponType)
+        {
+            case Weapon.WeaponType.Pistol:
+                totalPistolAmmo -= bulletsToDecrease;
+                break;
+            case Weapon.WeaponType.Rifle:
+                totalRifleAmmo -= bulletsToDecrease;
+                break;
+        }
+    }
+
+    public int CheckAmmoLeftFor(Weapon.WeaponType thisWeaponType)
+    {
+        switch (thisWeaponType)
+        {
+            case Weapon.WeaponType.Pistol:
+                return totalPistolAmmo;
+            case Weapon.WeaponType.Rifle:
+                return totalRifleAmmo;
+            default:
+                return 0;
+        }
+    }
+
+#endregion
 }

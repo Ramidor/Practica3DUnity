@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+
+    public int bulletDamage;
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Target"))
@@ -23,17 +25,18 @@ public class Bullet : MonoBehaviour
 
             Destroy(gameObject);
         }
-<<<<<<< Updated upstream
-=======
         if (collision.gameObject.CompareTag("Zombie"))
         {
             print("hit " + collision.gameObject.name);
             collision.gameObject.GetComponent<Enemy>().RecibirDaño(bulletDamage);
+
             CreateBloodEffect(collision);
 
             Destroy(gameObject);
         }
->>>>>>> Stashed changes
+
+            Destroy(gameObject);
+        }
     }
 
     private void CreateBulletImpactEffect(Collision objectWeHit)
@@ -46,17 +49,8 @@ public class Bullet : MonoBehaviour
 
         
     }
-<<<<<<< Updated upstream
     
 }
-=======
-    private void CreateBloodEffect(Collision objectWeHit)
-    {
-        ContactPoint contact = objectWeHit.contacts[0];
 
-        GameObject bloodSprayPrefab = Instantiate(GlobalReferences.Instance.sangreEffect, contact.point, Quaternion.LookRotation(contact.normal));
-
-        bloodSprayPrefab.transform.SetParent(objectWeHit.transform);
-    }
 }
->>>>>>> Stashed changes
+
