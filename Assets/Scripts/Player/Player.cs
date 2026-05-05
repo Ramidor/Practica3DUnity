@@ -7,6 +7,9 @@ public class Player : MonoBehaviour
 {
     public int HP = 100;
     public GameObject bloodyScreenEffect;
+
+    public AudioSource playerChannel;
+    public AudioClip playerHurtSound;
  
     public void RecibirDaño(int daño)
     {
@@ -22,6 +25,7 @@ public class Player : MonoBehaviour
         }
         else
         {
+            playerChannel.PlayOneShot(playerHurtSound);
             print("Has recibido " + daño + " puntos de daño. HP restante: " + HP);
             StartCoroutine(ShowBloodyScreenEffect());
         }
