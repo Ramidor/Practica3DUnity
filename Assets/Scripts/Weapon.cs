@@ -50,7 +50,8 @@ public class Weapon : MonoBehaviour
     public enum WeaponType
     {
         Pistol,
-        Rifle
+        Rifle,
+        Shotgun
     }
     
     public WeaponType thisWeaponType;
@@ -69,6 +70,7 @@ public class Weapon : MonoBehaviour
         readyToShoot = true;
         burstBulletsLeft = bulletsPerBurst;
         animator = GetComponent<Animator>();
+        
 
         bulletsLeft = magazineSize;
 
@@ -80,6 +82,7 @@ public class Weapon : MonoBehaviour
     {   
         if(isActiveWeapon)
         {
+            this.gameObject.layer = LayerMask.NameToLayer("WeaponRender");
             foreach (Transform child in transform)
             {
                 child.gameObject.layer = LayerMask.NameToLayer("WeaponRender");
@@ -136,6 +139,7 @@ public class Weapon : MonoBehaviour
         {
             foreach (Transform child in transform)
             {
+                this.gameObject.layer = LayerMask.NameToLayer("Default");
                 child.gameObject.layer = LayerMask.NameToLayer("Default");
             }
         }

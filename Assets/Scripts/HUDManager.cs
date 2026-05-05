@@ -90,6 +90,8 @@ public class HUDManager : MonoBehaviour
                 return Resources.Load<GameObject>("PistolM1911_Weapon").GetComponent<SpriteRenderer>().sprite;
             case Weapon.WeaponType.Rifle:
                 return Resources.Load<GameObject>("RifleAK74_Weapon").GetComponent<SpriteRenderer>().sprite;
+            case Weapon.WeaponType.Shotgun:
+                return Resources.Load<GameObject>("Shotgun_Weapon").GetComponent<SpriteRenderer>().sprite;
             default:
                 return null;
         }
@@ -103,6 +105,8 @@ public class HUDManager : MonoBehaviour
                 return Resources.Load<GameObject>("Pistol_Ammo").GetComponent<SpriteRenderer>().sprite;
             case Weapon.WeaponType.Rifle:
                 return Resources.Load<GameObject>("Rifle_Ammo").GetComponent<SpriteRenderer>().sprite;
+            case Weapon.WeaponType.Shotgun:
+                return Resources.Load<GameObject>("Shotgun_Ammo").GetComponent<SpriteRenderer>().sprite;
             default:
                 return null;
         }
