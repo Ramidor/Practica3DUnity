@@ -36,46 +36,55 @@ public class InteractionManager : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
             GameObject hitObject = hit.transform.gameObject;
-
             if (hitObject.GetComponent<Weapon>() && hitObject.GetComponent<Weapon>().isActiveWeapon == false)
             {
                 hoverWeapon = hitObject.gameObject.GetComponent<Weapon>();
                 hoverWeapon.GetComponent<Outline>().enabled = true;
-                if (WeaponManager.Instance.activeWeaponSlot.GetComponent<Weapon>() != null)
-                {
 
-                    if (WeaponManager.Instance.activeWeaponSlot.GetComponent<Weapon>().name != hitObject.GetComponent<Weapon>().name)
+                // 1. Buscamos el arma que tenemos equipada (el HIJO del slot)
+                Weapon armaEquipada = null;
+                if (WeaponManager.Instance.activeWeaponSlot.transform.childCount > 0)
+                {
+                    armaEquipada = WeaponManager.Instance.activeWeaponSlot.transform.GetChild(0).GetComponent<Weapon>();
+                }
+
+                // 2. Si tenemos un arma en las manos, comparamos los nombres
+                if (armaEquipada != null)
+                {
+                    if (armaEquipada.name != hoverWeapon.name)
                     {
-                        textoInteraccion.text = "Pulsar [E] para abrir comprar " + hitObject.GetComponent<Weapon>().name + " [Coste: " + hitObject.GetComponent<Weapon>().cost.ToString() + "]";
+                        // --- ES UN ARMA DISTINTA (COMPRAR ARMA NUEVA) ---
+                        textoInteraccion.text = "Pulsar [E] para comprar " + hoverWeapon.name + " [Coste: " + hoverWeapon.cost.ToString() + "]";
+
+                        if (Input.GetKeyDown(KeyCode.E))
+                        {
+                            WeaponManager.Instance.PickUpWeapon(hitObject.gameObject);
+                            PuntuacionManager.instance.GastarPuntos(hoverWeapon.cost);
+                        }
                     }
                     else
                     {
-                        textoInteraccion.text = "Pulsar [E] para comprar municion" + hitObject.GetComponent<Weapon>().name + " [Coste: " + hitObject.GetComponent<Weapon>().costAmmo.ToString() + "]";
+                        // --- ES LA MISMA ARMA (COMPRAR MUNICIÓN) ---
+                        textoInteraccion.text = "Pulsar [E] para comprar munición de " + hoverWeapon.name + " [Coste: " + hoverWeapon.costAmmo.ToString() + "]";
+
+                        if (Input.GetKeyDown(KeyCode.E))
+                        {
+                            // IMPORTANTE: Aquí deberías llamar a una función para dar munición, NO volver a coger el arma entera.
+                            // Por ejemplo: WeaponManager.Instance.BuyAmmoFor(hoverWeapon.name);
+                            WeaponManager.Instance.PickUpWeapon(hitObject.gameObject); // <-- Ojo, esto te equipa el arma de nuevo.
+                            PuntuacionManager.instance.GastarPuntos(hoverWeapon.costAmmo);
+                        }
                     }
                 }
                 else
                 {
-                    textoInteraccion.text = "Pulsar [E] para abrir comprar " + hitObject.GetComponent<Weapon>().name + " [Coste: " + hitObject.GetComponent<Weapon>().cost.ToString() + "]";
-                }
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    WeaponManager.Instance.PickUpWeapon(hitObject.gameObject);
-                    if (WeaponManager.Instance.activeWeaponSlot.GetComponent<Weapon>() != null)
+                    // --- ES UN ARMA DISTINTA (COMPRAR ARMA NUEVA) ---
+                    textoInteraccion.text = "Pulsar [E] para comprar " + hoverWeapon.name + " [Coste: " + hoverWeapon.cost.ToString() + "]";
+                    if (Input.GetKeyDown(KeyCode.E))
                     {
-                        if (WeaponManager.Instance.activeWeaponSlot.GetComponent<Weapon>().name != hitObject.GetComponent<Weapon>().name)
-                        {
-                            PuntuacionManager.instance.GastarPuntos(hitObject.GetComponent<Weapon>().cost);
-                        }
-                        else
-                        {
-                            PuntuacionManager.instance.GastarPuntos(hitObject.GetComponent<Weapon>().costAmmo);
-                        }
+                        WeaponManager.Instance.PickUpWeapon(hitObject.gameObject);
+                        PuntuacionManager.instance.GastarPuntos(hoverWeapon.cost);
                     }
-                    else
-                    {
-                        PuntuacionManager.instance.GastarPuntos(hitObject.GetComponent<Weapon>().cost);
-                    }
-
                 }
 
             }
@@ -84,6 +93,7 @@ public class InteractionManager : MonoBehaviour
                 if (hoverWeapon)
                 {
                     hoverWeapon.GetComponent<Outline>().enabled = false;
+                    textoInteraccion.text = ""; // Limpiamos el texto al dejar de mirar
                 }
             }
 

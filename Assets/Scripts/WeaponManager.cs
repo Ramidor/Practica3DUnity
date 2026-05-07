@@ -8,6 +8,7 @@ public class WeaponManager : MonoBehaviour
     public static WeaponManager Instance { get; private set; }
 
     public List<GameObject> weaponsSlots;
+    public GameObject armaInicial;
 
     public GameObject activeWeaponSlot;
 
@@ -42,6 +43,11 @@ public class WeaponManager : MonoBehaviour
     private void Start()
     {
         activeWeaponSlot = weaponsSlots[0];
+        if (armaInicial != null)
+        {
+            PickUpWeapon(armaInicial);
+        }
+
     }
 
     private void Update()

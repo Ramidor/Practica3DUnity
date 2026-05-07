@@ -6,17 +6,30 @@ using UnityEngine.SceneManagement;
 public class PuertaInteractuable : MonoBehaviour
 {
     [Header("Configuración de la Puerta")]
-    public float costePuerta; // Puedes cambiar esto en el Inspector para cada puerta
-    public bool estaAbierta = false; // Ahora es pública para que el jugador la lea
+    public float costePuerta; 
+    public bool estaAbierta = false; 
     
     private Animator anim;
 
     [Header("Sonidos")]
-    public AudioSource audioSourceJugador; // El altavoz
-    public AudioClip sonidoAbrir; // El clip de sonido para abrir la puerta
+    public AudioSource audioSourceJugador; 
+    public AudioClip sonidoAbrir; 
+
+    // --- LO NUEVO ---
+    [Header("Zonas de Spawn (Call of Duty)")]
+    [Tooltip("Arrastra aquí los puntos de spawn de la nueva habitación que esconde esta puerta")]
+    public List<Transform> nuevosSpawnsDesbloqueados;
+    
+    // El cerebro central que controla las oleadas
+    private ZombieSpawnerController spawnerPrincipal;
+    // ----------------
+
     void Start()
     {
         anim = GetComponent<Animator>();
+
+        // Buscamos el Spawner automáticamente en el mapa para no tener que arrastrarlo a mano
+        spawnerPrincipal = FindObjectOfType<ZombieSpawnerController>();
     }
 
     public void AlternarPuerta()
@@ -33,11 +46,20 @@ public class PuertaInteractuable : MonoBehaviour
             colliderInteraccion.enabled = false;
         }
     
-            if (audioSourceJugador != null && sonidoAbrir != null)
-            {
-                audioSourceJugador.PlayOneShot(sonidoAbrir);
-            }
+        if (audioSourceJugador != null && sonidoAbrir != null)
+        {
+            audioSourceJugador.PlayOneShot(sonidoAbrir);
+        }
+
+        // --- LO NUEVO: ¡La conexión! ---
+        // Si la puerta tiene spawns guardados, se los inyectamos al Spawner al abrirse
+        if (spawnerPrincipal != null && nuevosSpawnsDesbloqueados.Count > 0)
+        {
+            spawnerPrincipal.UnlockNewSpawns(nuevosSpawnsDesbloqueados);
+        }
+        // -------------------------------
     }
+
     public void TerminarPartida()
     {
         StartCoroutine(CargarPantallaConDelay());
