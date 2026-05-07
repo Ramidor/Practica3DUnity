@@ -83,6 +83,10 @@ public class ZombieSpawnerController : MonoBehaviour
         {
             currentZombiesAlive.Remove(zombie);
         }
+        foreach (Enemy zombie in zombiesToRemove)
+        {
+            Destroy(zombie.gameObject);
+        }
         zombiesToRemove.Clear();
 
         if (currentZombiesAlive.Count == 0 && !inColdown)
