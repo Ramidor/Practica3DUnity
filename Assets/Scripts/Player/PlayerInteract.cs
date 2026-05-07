@@ -66,6 +66,7 @@ public class PlayerInteract : MonoBehaviour
 
                     if (Input.GetKeyDown(KeyCode.E))
                     {
+
                         IntentarComprarPuertaFinal(scriptPuerta);
                     }
                 }
@@ -99,9 +100,16 @@ public class PlayerInteract : MonoBehaviour
         // Si GastarPuntos devuelve true, significa que teníamos el dinero y ya nos lo ha cobrado.
         if (PuntuacionManager.instance.GastarPuntos(scriptPuerta.costePuerta))
         {
+            int coleccionablesTotales = InventarioManager.instance.listaColeccionables.Count;
+
+            if (coleccionablesTotales > 3)
+            {
+                PuntuacionManager.instance.puntos += 10000f; // Bonus por conseguir todas las gemas
+            }
             // Borramos el texto y abrimos la puerta
             textoInteraccion.text = "Salida desbloqueada. ¡Enhorabuena por terminar la partida!";
             PlayerPrefs.SetFloat("PuntosFinales", PuntuacionManager.instance.puntos);
+            PlayerPrefs.SetInt("ColeccionablesTotales", coleccionablesTotales);
             scriptPuerta.TerminarPartida();
         }
         else
@@ -111,7 +119,7 @@ public class PlayerInteract : MonoBehaviour
             {
                 audioSourceJugador.PlayOneShot(sonidoErrorPuntos);
             }
-            
+
         }
     }
 }

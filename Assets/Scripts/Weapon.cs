@@ -46,16 +46,19 @@ public class Weapon : MonoBehaviour
     public Vector3 spawnPosition;
     public Vector3 spawnRotation;
 
+    public float tiempoEscopeta = 0f;
+
     private bool isADS;
 
-
+    [Header("Shotgun")]
+    public int pelletsPerShot;
     public enum WeaponType
     {
         Pistol,
         Rifle,
         Shotgun
     }
-    
+
     public WeaponType thisWeaponType;
 
     public enum ShootingMode
@@ -66,13 +69,13 @@ public class Weapon : MonoBehaviour
     }
 
     public ShootingMode currentShootingMode;
-    
+
     private void Awake()
     {
         readyToShoot = true;
         burstBulletsLeft = bulletsPerBurst;
         animator = GetComponent<Animator>();
-        
+
 
         bulletsLeft = magazineSize;
 
@@ -81,8 +84,8 @@ public class Weapon : MonoBehaviour
 
 
     void Update()
-    {   
-        if(isActiveWeapon)
+    {
+        if (isActiveWeapon)
         {
             this.gameObject.layer = LayerMask.NameToLayer("WeaponRender");
             foreach (Transform child in transform)
@@ -102,17 +105,18 @@ public class Weapon : MonoBehaviour
 
             if (GetComponent<Outline>().enabled)
                 GetComponent<Outline>().enabled = false;
-            
-            if(bulletsLeft <= 0 && isShooting)
+
+            if (bulletsLeft <= 0 && isShooting)
             {
                 SoundManager.Instance.emptySoundM1911.Play();
             }
 
-            if(currentShootingMode == ShootingMode.Auto)
+            if (currentShootingMode == ShootingMode.Auto)
             {
                 // Hold to shoot, release to stop shooting
                 isShooting = Input.GetKey(KeyCode.Mouse0);
-            }else if(currentShootingMode == ShootingMode.Single || currentShootingMode == ShootingMode.Burst)
+            }
+            else if (currentShootingMode == ShootingMode.Single || currentShootingMode == ShootingMode.Burst)
             {
                 // Press to shoot, release to stop shooting
                 isShooting = Input.GetKeyDown(KeyCode.Mouse0);
@@ -124,9 +128,9 @@ public class Weapon : MonoBehaviour
                 Reload();
 
             }
-            
+
             // Auto reload when trying to shoot with no bullets left
-            if(readyToShoot && !isShooting && !isReloading && bulletsLeft <= 0)
+            if (readyToShoot && !isShooting && !isReloading && bulletsLeft <= 0)
             {
                 //Reload();
             }
@@ -135,6 +139,7 @@ public class Weapon : MonoBehaviour
             {
                 burstBulletsLeft = bulletsPerBurst;
                 FireWeapon();
+
             }
         }
         else
@@ -147,14 +152,16 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    public void EnterADS(){
+    public void EnterADS()
+    {
         animator.SetTrigger("enterADS");
         isADS = true;
         HUDManager.Instance.middleDot.SetActive(false);
         spreadIntensity = adsSpreadIntensity;
     }
 
-    public void ExitADS(){
+    public void ExitADS()
+    {
         animator.SetTrigger("exitADS");
         isADS = false;
         HUDManager.Instance.middleDot.SetActive(true);
@@ -162,7 +169,7 @@ public class Weapon : MonoBehaviour
     }
 
     private void FireWeapon()
-    {   
+    {
         bulletsLeft--;
 
         muzzleEffect.GetComponent<ParticleSystem>().Play();
@@ -176,41 +183,56 @@ public class Weapon : MonoBehaviour
             animator.SetTrigger("recoil");
         }
 
-
         SoundManager.Instance.PlayShootingSound(thisWeaponType);
-
         readyToShoot = false;
-        Vector3 shootingDirection = CalculateDirectionAndSpread().normalized;
-        
-        // Instantiate the bullet and apply force to it
-        GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
 
-        Bullet bul = bullet.GetComponent<Bullet>();
-        bul.bulletDamage = weaponDamage;
+        // --- LÓGICA DE DISPARO SEGÚN EL MODO ---
 
-        // Poiting the bullet in the shooting direction
-        bullet.transform.forward = shootingDirection;
+        if (currentShootingMode == ShootingMode.Burst)
+        {
+            // La escopeta dispara X perdigones A LA VEZ
+            for (int i = 0; i < pelletsPerShot; i++)
+            {
+                SpawnBullet();
+            }
+        }
+        else
+        {
+            // Las demás armas disparan 1 bala normal
+            SpawnBullet();
+        }
 
-        // shoot the bullet
-        bullet.GetComponent<Rigidbody>().AddForce(shootingDirection * bulletSpeed, ForceMode.Impulse);
+        // ----------------------------------------
 
-        // Destroy the bullet after a certain time to prevent memory leaks
-        StartCoroutine(DestroyBulletAfterTime(bullet, bulletPrefabLifeTime));
-
-        // Check if we are in burst mode and if we have bullets left in the burst
-        if(allowReset)
+        // Comprobamos el retardo y el reinicio
+        if (allowReset)
         {
             Invoke("ResetShot", shootingDelay);
             allowReset = false;
         }
 
-        if(currentShootingMode == ShootingMode.Burst && burstBulletsLeft > 1)
+        // Si es ráfaga, programa el siguiente tiro de la ráfaga
+        if (currentShootingMode == ShootingMode.Burst && burstBulletsLeft > 1)
         {
             burstBulletsLeft--;
             Invoke("FireWeapon", shootingDelay);
         }
     }
 
+    // He separado la creación de la bala en esta pequeña función para no repetir código
+    private void SpawnBullet()
+    {
+        Vector3 shootingDirection = CalculateDirectionAndSpread().normalized;
+
+        GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
+        Bullet bul = bullet.GetComponent<Bullet>();
+        bul.bulletDamage = weaponDamage;
+
+        bullet.transform.forward = shootingDirection;
+        bullet.GetComponent<Rigidbody>().AddForce(shootingDirection * bulletSpeed, ForceMode.Impulse);
+
+        StartCoroutine(DestroyBulletAfterTime(bullet, bulletPrefabLifeTime));
+    }
     private void Reload()
     {
         SoundManager.Instance.PlayReloadingSound(thisWeaponType);
@@ -231,7 +253,7 @@ public class Weapon : MonoBehaviour
         else
         {
             bulletsLeft = WeaponManager.Instance.CheckAmmoLeftFor(thisWeaponType);
-            WeaponManager.Instance.DecreaseTotalAmmo(bulletsLeft, thisWeaponType);  
+            WeaponManager.Instance.DecreaseTotalAmmo(bulletsLeft, thisWeaponType);
         }
 
         isReloading = false;
@@ -259,7 +281,7 @@ public class Weapon : MonoBehaviour
         else
         {
             // If the ray doesn't hit anything
-            targetPoint = ray.GetPoint(100); 
+            targetPoint = ray.GetPoint(100);
         }
 
         Vector3 direction = targetPoint - bulletSpawn.position;

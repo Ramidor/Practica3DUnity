@@ -12,6 +12,7 @@ public class Throwable : MonoBehaviour
     float countdown;
     bool hasExploded = false;
     public bool hasBeenThrown = false;
+    public int cost;
 
     public enum ThrowableType { 
         Grenade 

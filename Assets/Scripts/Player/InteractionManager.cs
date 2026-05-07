@@ -71,8 +71,21 @@ public class InteractionManager : MonoBehaviour
                         {
                             // IMPORTANTE: Aquí deberías llamar a una función para dar munición, NO volver a coger el arma entera.
                             // Por ejemplo: WeaponManager.Instance.BuyAmmoFor(hoverWeapon.name);
-                            WeaponManager.Instance.PickUpWeapon(hitObject.gameObject); // <-- Ojo, esto te equipa el arma de nuevo.
-                            PuntuacionManager.instance.GastarPuntos(hoverWeapon.costAmmo);
+                            if (WeaponManager.Instance.totalPistolAmmo < 60 && armaEquipada.name == "M1911")
+                            {
+                                WeaponManager.Instance.PickUpWeapon(hitObject.gameObject); // <-- Ojo, esto te equipa el arma de nuevo.
+                                PuntuacionManager.instance.GastarPuntos(hoverWeapon.costAmmo);
+                            }
+                            else if (WeaponManager.Instance.totalRifleAmmo < 180 && armaEquipada.name == "AK74")
+                            {
+                                WeaponManager.Instance.PickUpWeapon(hitObject.gameObject);
+                                PuntuacionManager.instance.GastarPuntos(hoverWeapon.costAmmo);
+                            }
+                            else if (WeaponManager.Instance.totalShotgunAmmo < 40 && armaEquipada.name == "Shotgun")
+                            {
+                                WeaponManager.Instance.PickUpWeapon(hitObject.gameObject);
+                                PuntuacionManager.instance.GastarPuntos(hoverWeapon.costAmmo);
+                            }
                         }
                     }
                 }
@@ -118,14 +131,28 @@ public class InteractionManager : MonoBehaviour
             }
 
             //Throwable
+            //Throwable
             if (hitObject.GetComponent<Throwable>())
             {
                 hoverThrowable = hitObject.gameObject.GetComponent<Throwable>();
                 hoverThrowable.GetComponent<Outline>().enabled = true;
 
+                // Mostramos el texto con el coste
+                textoInteraccion.text = "Pulsar [E] para comprar Granadas [Coste: " + hoverThrowable.cost.ToString() + "]";
+
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    WeaponManager.Instance.PickUpThrowable(hoverThrowable);
+                    // Si la función devuelve true (teníamos menos de 5 granadas)
+                    if (WeaponManager.Instance.PickUpThrowable(hoverThrowable))
+                    {
+                        // Le cobramos los puntos
+                        PuntuacionManager.instance.GastarPuntos(hoverThrowable.cost);
+                    }
+                    else
+                    {
+                        // Opcional: Podrías cambiar el textoInteraccion a "Ya tienes el máximo de granadas"
+                        Debug.Log("Ya estás a tope de granadas, no gastas puntos.");
+                    }
                 }
             }
             else
@@ -133,9 +160,9 @@ public class InteractionManager : MonoBehaviour
                 if (hoverThrowable)
                 {
                     hoverThrowable.GetComponent<Outline>().enabled = false;
+                    textoInteraccion.text = ""; // Limpiamos el texto
                 }
             }
-
 
 
         }

@@ -17,7 +17,6 @@ public class WeaponManager : MonoBehaviour
     public int totalPistolAmmo = 0;
     public int totalShotgunAmmo = 0;
 
-
     [Header("Throwables")]
     public int grenades = 0;
     public float throwForce = 10f;
@@ -97,25 +96,39 @@ public class WeaponManager : MonoBehaviour
     }
 
 
-#region  || ---- Weapon ---- ||
+    #region  || ---- Weapon ---- ||
     public void PickUpWeapon(GameObject pickedWeapon)
     {
         // 1. En lugar de robar el arma original, creamos un clon exacto de ella
         GameObject clonDelArma = Instantiate(pickedWeapon);
-        
+
         // Opcional: Le quitamos la etiqueta "(Clone)" del nombre para mantenerlo limpio
         clonDelArma.name = pickedWeapon.name;
 
-        if(pickedWeapon.name == "M1911")
+        if (pickedWeapon.name == "M1911")
         {
+
             totalPistolAmmo += 40;
-        }else if(pickedWeapon.name == "AK74")
+            if (totalPistolAmmo > 60) // El máximo de munición que puedes tener para una pistola es 40, así que si te pasas, lo ajustamos a ese máximo
+            {
+                totalPistolAmmo = 60;
+            }
+        }
+        else if (pickedWeapon.name == "AK74")
         {
             totalRifleAmmo += 120;
+            if (totalRifleAmmo > 180) // El máximo de munición que puedes tener para un rifle es 120, así que si te pasas, lo ajustamos a ese máximo
+            {
+                totalRifleAmmo = 180;
+            }
         }
-        else if(pickedWeapon.name == "Shotgun")
+        else if (pickedWeapon.name == "Shotgun")
         {
-            totalShotgunAmmo += 200;
+            totalShotgunAmmo += 40;
+            if (totalShotgunAmmo > 40) // El máximo de munición que puedes tener para una escopeta es 40, así que si te pasas, lo ajustamos a ese máximo
+            {
+                totalShotgunAmmo = 40;
+            }
         }
 
         // 2. Nos equipamos el clon
@@ -149,7 +162,7 @@ public class WeaponManager : MonoBehaviour
 
             // Desvinculamos el arma vieja del jugador para que caiga al mundo real
             weaponToDrop.transform.SetParent(null);
-            
+
             // La soltamos justo delante del jugador y un poquito elevada para que caiga al suelo de forma natural
             weaponToDrop.transform.position = transform.position + transform.forward * 1.5f + Vector3.up * 1f;
         }
@@ -162,7 +175,7 @@ public class WeaponManager : MonoBehaviour
             Weapon currentWeapon = activeWeaponSlot.transform.GetChild(0).gameObject.GetComponent<Weapon>();
             currentWeapon.isActiveWeapon = false;
         }
-        
+
         activeWeaponSlot = weaponsSlots[slotIndex];
 
         if (activeWeaponSlot.transform.childCount > 0)
@@ -172,30 +185,35 @@ public class WeaponManager : MonoBehaviour
         }
     }
 
-#endregion
+    #endregion
 
-#region || ---- Throwables ---- ||
-    public void PickUpThrowable(Throwable throwable)
+    #region || ---- Throwables ---- ||
+    public bool PickUpThrowable(Throwable throwable)
     {
         switch (throwable.throwableType)
         {
             case Throwable.ThrowableType.Grenade:
-                PickUpGrenade();
-                break;
+                return PickUpGrenade();
+            default:
+                return false;
         }
     }
 
-
-    private void PickUpGrenade()
+    private bool PickUpGrenade()
     {
-        if (grenades < 5)
+        if (grenades < 5) // Si tenemos hueco
         {
-            grenades += 1;
-            Destroy(InteractionManager.Instance.hoverThrowable.gameObject);
-            HUDManager.Instance.UpdateThrowables(Throwable.ThrowableType.Grenade);
-        }
-    }
+            // En el CoD, cuando compras en la pared te rellenan las granadas al máximo de golpe
+            grenades = 5;
 
+            // ¡Hemos borrado el Destroy() de aquí para que la pared no se quede vacía!
+
+            HUDManager.Instance.UpdateThrowables(Throwable.ThrowableType.Grenade);
+            return true; // Confirmamos que se ha realizado la compra
+        }
+
+        return false; // Rechazamos la compra porque ya tiene 5
+    }
     private void ThrowLethal()
     {
         GameObject lethalPrefab = grenadePrefab;
@@ -203,18 +221,18 @@ public class WeaponManager : MonoBehaviour
         GameObject throwable = Instantiate(lethalPrefab, throwableSpawn.transform.position, throwableSpawn.transform.rotation);
         Rigidbody rb = throwable.GetComponent<Rigidbody>();
 
-        rb.AddForce(Camera.main.transform.forward * (throwForce  * forceMultiplier), ForceMode.VelocityChange);
+        rb.AddForce(Camera.main.transform.forward * (throwForce * forceMultiplier), ForceMode.VelocityChange);
 
         throwable.GetComponent<Throwable>().hasBeenThrown = true;
 
         grenades -= 1;
-        
+
         HUDManager.Instance.UpdateThrowables(Throwable.ThrowableType.Grenade);
     }
 
-#endregion
-    
-#region || ---- Ammo ---- ||
+    #endregion
+
+    #region || ---- Ammo ---- ||
 
     internal void PickUpAmmo(AmmoBox ammo)
     {
@@ -263,5 +281,6 @@ public class WeaponManager : MonoBehaviour
         }
     }
 
-#endregion
+    #endregion
+
 }

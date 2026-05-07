@@ -11,11 +11,14 @@ public class RankingManager : MonoBehaviour
     [Header("UI Pantalla Guardar")]
     public TMP_InputField inputNombre;
     public TextMeshProUGUI textoPuntosFinales;
+    public TextMeshProUGUI textoColeccionablesFinales;
     
     [Header("UI Pantalla Records")]
     public TextMeshProUGUI textoUiRanking;
+
     
     private int puntosParaGuardar;
+    public int coleccionablesRecogidos;
     private string rutaArchivo;
 
     void Start()
@@ -27,11 +30,17 @@ public class RankingManager : MonoBehaviour
         // 1. Recuperamos los puntos de PlayerPrefs (el 0 es por si no encuentra nada)
         float puntosRecuperados = PlayerPrefs.GetFloat("PuntosFinales", 0f);
         puntosParaGuardar = Mathf.FloorToInt(puntosRecuperados);
+        coleccionablesRecogidos = PlayerPrefs.GetInt("ColeccionablesTotales", 0);
 
         // 2. Si estamos en la pantalla de meter el nombre, actualizamos el texto
         if (textoPuntosFinales != null)
         {
             textoPuntosFinales.text = puntosParaGuardar.ToString();
+        }
+
+        if (textoColeccionablesFinales != null)
+        {
+            textoColeccionablesFinales.text = "Has recogido "+ coleccionablesRecogidos.ToString()+" coleccionables. Si conseguiste 4, tuviste un bono de 10000 puntos!";
         }
 
         // 3. Si estamos en la pantalla de los records, mostramos la lista
