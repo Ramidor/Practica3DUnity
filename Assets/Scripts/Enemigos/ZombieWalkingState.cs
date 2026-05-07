@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public class ZombieWalkingState : StateMachineBehaviour
 {
-
     float timer;
     public float walkTime = 10f;
     Transform player;
@@ -23,32 +22,52 @@ public class ZombieWalkingState : StateMachineBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
         agent = animator.GetComponent<NavMeshAgent>();
         enemy = animator.GetComponent<Enemy>();
-        agent.speed = patrolSpeed;
+        
+        if (agent != null)
+        {
+            agent.speed = patrolSpeed;
+        }
 
         patrolPoints.Clear();
-
         GameObject patrolPointsParent = GameObject.FindGameObjectWithTag("Waypoints");
-        foreach (Transform point in patrolPointsParent.transform)
+        
+        if (patrolPointsParent != null)
         {
-            patrolPoints.Add(point);
+            foreach (Transform point in patrolPointsParent.transform)
+            {
+                patrolPoints.Add(point);
+            }
+            
+            // Pequeña seguridad inicial
+            if (agent != null && agent.isOnNavMesh && patrolPoints.Count > 0)
+            {
+                Vector3 nextPosition = patrolPoints[Random.Range(0, patrolPoints.Count)].position;
+                agent.SetDestination(nextPosition);
+            }
         }
-        Vector3 nextPosition = patrolPoints[Random.Range(0, patrolPoints.Count)].position;
-        agent.SetDestination(nextPosition);
     }
 
-    // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-
         if (enemy != null && enemy.zombieChannel != null && enemy.zombieChannel.isPlaying == false)
         {
             enemy.zombieChannel.clip = enemy.zombieWalking;
             enemy.zombieChannel.PlayOneShot(enemy.zombieWalking);
         }
-        if (agent.remainingDistance <= agent.stoppingDistance)
+
+        // --- EL ESCUDO ANTI-CRASHEOS ---
+        // Solo comprobamos la distancia si el agente existe, está tocando el suelo y NO está calculando la ruta
+        if (agent != null && agent.isOnNavMesh && !agent.pathPending)
         {
-            agent.SetDestination(patrolPoints[Random.Range(0, patrolPoints.Count)].position);
+            if (agent.remainingDistance <= agent.stoppingDistance)
+            {
+                if (patrolPoints.Count > 0)
+                {
+                    agent.SetDestination(patrolPoints[Random.Range(0, patrolPoints.Count)].position);
+                }
+            }
         }
+        // -------------------------------
 
         timer += Time.deltaTime;
         if (timer >= walkTime)
@@ -56,20 +75,26 @@ public class ZombieWalkingState : StateMachineBehaviour
             animator.SetBool("isWalking", false);
         }
 
-        float distanceToPlayer = Vector3.Distance(player.position, animator.transform.position);
-        if (distanceToPlayer <= detectionRange)
+        if (player != null)
         {
-            animator.SetBool("isChasing", true);
+            float distanceToPlayer = Vector3.Distance(player.position, animator.transform.position);
+            if (distanceToPlayer <= detectionRange)
+            {
+                animator.SetBool("isChasing", true);
+            }
         }
-
     }
 
-    // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        agent.SetDestination(agent.transform.position);
-        enemy.zombieChannel.Stop();
-
-
+        if (agent != null && agent.isOnNavMesh)
+        {
+            agent.SetDestination(agent.transform.position);
+        }
+        
+        if (enemy != null && enemy.zombieChannel != null)
+        {
+            enemy.zombieChannel.Stop();
+        }
     }
 }

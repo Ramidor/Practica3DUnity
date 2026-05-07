@@ -5,9 +5,10 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private int HP = 100;
+    [SerializeField] public int HP = 100;
     private Animator animator;
     private NavMeshAgent navAgent;
+    public bool isDead = false;
 
     public AudioClip zombieWalking;
     public AudioClip zombieDeath;
@@ -40,9 +41,11 @@ public class Enemy : MonoBehaviour
             }
             zombieChannel.PlayOneShot(zombieDeath);
              GetComponent<Collider>().enabled = false; // Desactiva el collider para evitar más colisiones
+            isDead = true;
+
             PuntuacionManager.instance.SumarPuntos(100f);
 
-            Destroy(gameObject, 4f); // Destruye el objeto después de 4 segundos para que la animación de muerte se reproduzca
+           
         }
         else
         {
@@ -55,9 +58,9 @@ public class Enemy : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, 2.5f); // Ataque
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, 18f); // Start chasing
+        Gizmos.DrawWireSphere(transform.position, 200f); // Start chasing
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, 21f); // Stop chasing
-
+        Gizmos.DrawWireSphere(transform.position, 201f); // Stop chasing
     }
+
 }

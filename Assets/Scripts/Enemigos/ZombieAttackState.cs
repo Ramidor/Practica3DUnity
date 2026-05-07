@@ -1,55 +1,47 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class ZombieAttackState : StateMachineBehaviour
 {
-    Transform player;
-    NavMeshAgent agent;
     Enemy enemy;
-      
-        public float stopAttackingDistance = 3f;
+
+    [Header("Cerebro Difuso: Rabia")]
+    [Tooltip("Eje X: Vida del Zombie (Ej: 100 a 0). Eje Y: Velocidad de Animación (Ej: 1 a 3).")]
+    public AnimationCurve velocidadAtaqueFuzzy;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        agent = animator.GetComponent<NavMeshAgent>();
+        // Conectamos con el script Enemy de tu zombie para poder leer su vida
         enemy = animator.GetComponent<Enemy>();
     }
 
-    // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-     
-
-        if (enemy != null && enemy.zombieChannel != null && enemy.zombieChannel.isPlaying == false)
+        if (enemy != null)
         {
-            enemy.zombieChannel.clip = enemy.zombieAttack;
-            enemy.zombieChannel.PlayOneShot(enemy.zombieAttack);
+            float vidaDelZombie = enemy.HP;
+            if (vidaDelZombie <= 0)
+            {
+                animator.speed = 1f;
+                return;
+            }
+
+            float multiplicadorRabia = velocidadAtaqueFuzzy.Evaluate(vidaDelZombie);
+            multiplicadorRabia = Mathf.Clamp(multiplicadorRabia, 0.5f, 5f);
+            animator.speed = multiplicadorRabia;
+
+            // --- LA SOLUCIÓN AL BUG ---
+            // "stateInfo.normalizedTime" va de 0 (empieza la animación) a 1 (termina la animación)
+            // Si la animación ya va por el 95% o más, apagamos el ataque para que vuelva a perseguir
+            if (stateInfo.normalizedTime >= 0.95f)
+            {
+                animator.SetBool("isAttacking", false);
+            }
         }
-        LookAtPlayer();
-         float distanceToPlayer = Vector3.Distance(player.position, animator.transform.position);
-        if (distanceToPlayer >= stopAttackingDistance)
-        {
-            animator.SetBool("isAttacking", false);
-        }
-
-
     }
-
-    private void LookAtPlayer()
+    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-       Vector3 direction = player.position - agent.transform.position;
-       agent.transform.rotation = Quaternion.LookRotation(direction);
-
-       var yRotation = agent.transform.rotation.eulerAngles.y;
-         agent.transform.rotation = Quaternion.Euler(0, yRotation, 0);
-
-    }
-
-    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        enemy.zombieChannel.Stop();
+        // IMPORTANTÍSIMO: Cuando el zombie deje de atacar o muera, devolvemos la velocidad del Animator a 1
+        // para que no corra la animación de morir a cámara rápida.
+        animator.speed = 1f;
     }
 }

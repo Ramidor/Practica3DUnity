@@ -154,21 +154,6 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
---- !u!114 &-5292371084208658671
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d144dd304dc1ffb4bb738a879a6487c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chaseSpeed: 6
-  stopChasingDistance: 21
-  attackingDistance: 3
 --- !u!114 &-5285147193208200138
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -195,7 +180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   idleTime: 4
-  detectionRange: 18
+  detectionRange: 200
 --- !u!1101 &-1200395302171089996
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -543,7 +528,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkTime: 10
-  detectionRange: 18
+  detectionRange: 200
   patrolSpeed: 2
 --- !u!1102 &8267328545336219528
 AnimatorState:
@@ -558,8 +543,7 @@ AnimatorState:
   m_Transitions:
   - {fileID: -6323114618332222309}
   - {fileID: 1595078984955522778}
-  m_StateMachineBehaviours:
-  - {fileID: -5292371084208658671}
+  m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1

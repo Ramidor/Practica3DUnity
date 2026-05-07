@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    public int cost;
+    public int costAmmo;
     public bool isActiveWeapon;
     public int weaponDamage;
 
@@ -98,8 +100,8 @@ public class Weapon : MonoBehaviour
                 ExitADS();
             }
 
-
-            GetComponent<Outline>().enabled = false;
+            if (GetComponent<Outline>().enabled)
+                GetComponent<Outline>().enabled = false;
             
             if(bulletsLeft <= 0 && isShooting)
             {

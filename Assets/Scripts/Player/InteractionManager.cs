@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class InteractionManager : MonoBehaviour
@@ -10,6 +11,9 @@ public class InteractionManager : MonoBehaviour
     public AmmoBox hoverAmmoBox = null;
 
     public Throwable hoverThrowable = null;
+
+    [Header("Interfaz de Usuario (UI)")]
+    public TextMeshProUGUI textoInteraccion;
 
     private void Awake()
     {
@@ -37,12 +41,45 @@ public class InteractionManager : MonoBehaviour
             {
                 hoverWeapon = hitObject.gameObject.GetComponent<Weapon>();
                 hoverWeapon.GetComponent<Outline>().enabled = true;
-                
-                if (Input.GetKeyDown(KeyCode.F))
+                if (WeaponManager.Instance.activeWeaponSlot.GetComponent<Weapon>() != null)
+                {
+
+                    if (WeaponManager.Instance.activeWeaponSlot.GetComponent<Weapon>().name != hitObject.GetComponent<Weapon>().name)
+                    {
+                        textoInteraccion.text = "Pulsar [E] para abrir comprar " + hitObject.GetComponent<Weapon>().name + " [Coste: " + hitObject.GetComponent<Weapon>().cost.ToString() + "]";
+                    }
+                    else
+                    {
+                        textoInteraccion.text = "Pulsar [E] para comprar municion" + hitObject.GetComponent<Weapon>().name + " [Coste: " + hitObject.GetComponent<Weapon>().costAmmo.ToString() + "]";
+                    }
+                }
+                else
+                {
+                    textoInteraccion.text = "Pulsar [E] para abrir comprar " + hitObject.GetComponent<Weapon>().name + " [Coste: " + hitObject.GetComponent<Weapon>().cost.ToString() + "]";
+                }
+                if (Input.GetKeyDown(KeyCode.E))
                 {
                     WeaponManager.Instance.PickUpWeapon(hitObject.gameObject);
+                    if (WeaponManager.Instance.activeWeaponSlot.GetComponent<Weapon>() != null)
+                    {
+                        if (WeaponManager.Instance.activeWeaponSlot.GetComponent<Weapon>().name != hitObject.GetComponent<Weapon>().name)
+                        {
+                            PuntuacionManager.instance.GastarPuntos(hitObject.GetComponent<Weapon>().cost);
+                        }
+                        else
+                        {
+                            PuntuacionManager.instance.GastarPuntos(hitObject.GetComponent<Weapon>().costAmmo);
+                        }
+                    }
+                    else
+                    {
+                        PuntuacionManager.instance.GastarPuntos(hitObject.GetComponent<Weapon>().cost);
+                    }
+
                 }
-            }else
+
+            }
+            else
             {
                 if (hoverWeapon)
                 {
@@ -55,13 +92,14 @@ public class InteractionManager : MonoBehaviour
             {
                 hoverAmmoBox = hitObject.gameObject.GetComponent<AmmoBox>();
                 hoverAmmoBox.GetComponent<Outline>().enabled = true;
-                
-                if (Input.GetKeyDown(KeyCode.F))
+
+                if (Input.GetKeyDown(KeyCode.E))
                 {
                     WeaponManager.Instance.PickUpAmmo(hoverAmmoBox);
                     Destroy(hitObject.gameObject);
                 }
-            }else
+            }
+            else
             {
                 if (hoverAmmoBox)
                 {
@@ -74,12 +112,13 @@ public class InteractionManager : MonoBehaviour
             {
                 hoverThrowable = hitObject.gameObject.GetComponent<Throwable>();
                 hoverThrowable.GetComponent<Outline>().enabled = true;
-                
-                if (Input.GetKeyDown(KeyCode.F))
+
+                if (Input.GetKeyDown(KeyCode.E))
                 {
                     WeaponManager.Instance.PickUpThrowable(hoverThrowable);
                 }
-            }else
+            }
+            else
             {
                 if (hoverThrowable)
                 {
@@ -88,8 +127,8 @@ public class InteractionManager : MonoBehaviour
             }
 
 
-                
+
+        }
     }
-}
 
 }

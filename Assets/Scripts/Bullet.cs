@@ -27,8 +27,13 @@ public class Bullet : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Zombie"))
         {
+
+            if(collision.gameObject.GetComponent<Enemy>().isDead==false)
+            {
+                 collision.gameObject.GetComponent<Enemy>().RecibirDaño(bulletDamage);
+            }
             print("hit " + collision.gameObject.name);
-            collision.gameObject.GetComponent<Enemy>().RecibirDaño(bulletDamage);
+           
 
             CreateBloodEffect(collision);
 

@@ -94,25 +94,45 @@ public class WeaponManager : MonoBehaviour
 #region  || ---- Weapon ---- ||
     public void PickUpWeapon(GameObject pickedWeapon)
     {
-        AddWeaponIntoActiveSlot(pickedWeapon);
+        // 1. En lugar de robar el arma original, creamos un clon exacto de ella
+        GameObject clonDelArma = Instantiate(pickedWeapon);
+        
+        // Opcional: Le quitamos la etiqueta "(Clone)" del nombre para mantenerlo limpio
+        clonDelArma.name = pickedWeapon.name;
+
+        if(pickedWeapon.name == "M1911")
+        {
+            totalPistolAmmo += 40;
+        }else if(pickedWeapon.name == "AK74")
+        {
+            totalRifleAmmo += 120;
+        }
+        else if(pickedWeapon.name == "Shotgun")
+        {
+            totalShotgunAmmo += 200;
+        }
+
+        // 2. Nos equipamos el clon
+        AddWeaponIntoActiveSlot(clonDelArma);
     }
 
-    private void AddWeaponIntoActiveSlot(GameObject pickedWeapon)
+    private void AddWeaponIntoActiveSlot(GameObject weaponToEquip)
     {
-        DropCurrentWeapon(pickedWeapon);
+        // Soltamos el arma actual (ya no necesita saber de dónde viene la nueva)
+        DropCurrentWeapon();
 
-        pickedWeapon.transform.SetParent(activeWeaponSlot.transform);
+        weaponToEquip.transform.SetParent(activeWeaponSlot.transform);
 
-        Weapon weapon = pickedWeapon.GetComponent<Weapon>();
+        Weapon weapon = weaponToEquip.GetComponent<Weapon>();
 
-        pickedWeapon.transform.localPosition = weapon.spawnPosition;
-        pickedWeapon.transform.localEulerAngles = weapon.spawnRotation;
+        weaponToEquip.transform.localPosition = weapon.spawnPosition;
+        weaponToEquip.transform.localEulerAngles = weapon.spawnRotation;
 
         weapon.isActiveWeapon = true;
         weapon.animator.enabled = true;
     }
 
-    private void DropCurrentWeapon(GameObject pickedWeapon)
+    private void DropCurrentWeapon()
     {
         if (activeWeaponSlot.transform.childCount > 0)
         {
@@ -121,9 +141,11 @@ public class WeaponManager : MonoBehaviour
             weaponToDrop.GetComponent<Weapon>().isActiveWeapon = false;
             weaponToDrop.GetComponent<Weapon>().animator.enabled = false;
 
-            weaponToDrop.transform.SetParent(pickedWeapon.transform.parent);
-            weaponToDrop.transform.localPosition = pickedWeapon.transform.localPosition;
-            weaponToDrop.transform.localRotation = pickedWeapon.transform.localRotation;
+            // Desvinculamos el arma vieja del jugador para que caiga al mundo real
+            weaponToDrop.transform.SetParent(null);
+            
+            // La soltamos justo delante del jugador y un poquito elevada para que caiga al suelo de forma natural
+            weaponToDrop.transform.position = transform.position + transform.forward * 1.5f + Vector3.up * 1f;
         }
     }
 
@@ -142,7 +164,6 @@ public class WeaponManager : MonoBehaviour
             Weapon newWeapon = activeWeaponSlot.transform.GetChild(0).gameObject.GetComponent<Weapon>();
             newWeapon.isActiveWeapon = true;
         }
-
     }
 
 #endregion
