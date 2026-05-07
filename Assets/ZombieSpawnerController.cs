@@ -85,7 +85,7 @@ public class ZombieSpawnerController : MonoBehaviour
         }
         foreach (Enemy zombie in zombiesToRemove)
         {
-            Destroy(zombie.gameObject);
+            Destroy(zombie.gameObject, 3f);
         }
         zombiesToRemove.Clear();
 

@@ -101,7 +101,7 @@ public class WeaponManager : MonoBehaviour
     {
         // 1. En lugar de robar el arma original, creamos un clon exacto de ella
         GameObject clonDelArma = Instantiate(pickedWeapon);
-        clonDelArma.GetComponent<Outline>().enabled = false; // El clon empieza sin estar equipado, para que no haya problemas al soltar el arma original de la pared
+        
 
         // Opcional: Le quitamos la etiqueta "(Clone)" del nombre para mantenerlo limpio
         clonDelArma.name = pickedWeapon.name;
@@ -160,6 +160,12 @@ public class WeaponManager : MonoBehaviour
 
             weaponToDrop.GetComponent<Weapon>().isActiveWeapon = false;
             weaponToDrop.GetComponent<Weapon>().animator.enabled = false;
+            
+            // Desactivamos el outline cuando se suelta el arma
+            if (weaponToDrop.GetComponent<Outline>() != null)
+            {
+                weaponToDrop.GetComponent<Outline>().enabled = false;
+            }
 
             // Desvinculamos el arma vieja del jugador para que caiga al mundo real
             weaponToDrop.transform.SetParent(null);

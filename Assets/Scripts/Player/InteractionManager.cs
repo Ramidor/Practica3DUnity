@@ -58,8 +58,10 @@ public class InteractionManager : MonoBehaviour
 
                         if (Input.GetKeyDown(KeyCode.E))
                         {
+                            hoverWeapon.GetComponent<Outline>().enabled = false;
                             WeaponManager.Instance.PickUpWeapon(hitObject.gameObject);
                             PuntuacionManager.instance.GastarPuntos(hoverWeapon.cost);
+                            hoverWeapon = null;
                         }
                     }
                     else
@@ -73,18 +75,24 @@ public class InteractionManager : MonoBehaviour
                             // Por ejemplo: WeaponManager.Instance.BuyAmmoFor(hoverWeapon.name);
                             if (WeaponManager.Instance.totalPistolAmmo < 60 && armaEquipada.name == "M1911")
                             {
+                                hoverWeapon.GetComponent<Outline>().enabled = false;
                                 WeaponManager.Instance.PickUpWeapon(hitObject.gameObject); // <-- Ojo, esto te equipa el arma de nuevo.
                                 PuntuacionManager.instance.GastarPuntos(hoverWeapon.costAmmo);
+                                hoverWeapon = null;
                             }
                             else if (WeaponManager.Instance.totalRifleAmmo < 180 && armaEquipada.name == "AK74")
                             {
+                                hoverWeapon.GetComponent<Outline>().enabled = false;
                                 WeaponManager.Instance.PickUpWeapon(hitObject.gameObject);
                                 PuntuacionManager.instance.GastarPuntos(hoverWeapon.costAmmo);
+                                hoverWeapon = null;
                             }
                             else if (WeaponManager.Instance.totalShotgunAmmo < 40 && armaEquipada.name == "Shotgun")
                             {
+                                hoverWeapon.GetComponent<Outline>().enabled = false;
                                 WeaponManager.Instance.PickUpWeapon(hitObject.gameObject);
                                 PuntuacionManager.instance.GastarPuntos(hoverWeapon.costAmmo);
+                                hoverWeapon = null;
                             }
                         }
                     }
@@ -95,8 +103,10 @@ public class InteractionManager : MonoBehaviour
                     textoInteraccion.text = "Pulsar [E] para comprar " + hoverWeapon.name + " [Coste: " + hoverWeapon.cost.ToString() + "]";
                     if (Input.GetKeyDown(KeyCode.E))
                     {
+                        hoverWeapon.GetComponent<Outline>().enabled = false;
                         WeaponManager.Instance.PickUpWeapon(hitObject.gameObject);
                         PuntuacionManager.instance.GastarPuntos(hoverWeapon.cost);
+                        hoverWeapon = null;
                     }
                 }
 
