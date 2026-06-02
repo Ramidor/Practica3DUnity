@@ -1,16 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MouseMovement : MonoBehaviour
 {
-    public float mouseSensibility = 100f;
+    public float mouseSensibility;
+
+    public float mouseSensibilityDefault = 200f;
 
     private float xRotation = 0f;
     private float yRotation = 0f;
 
     public float topClamp = 90f;
     public float bottomClamp = -90f;
+
+    public Slider sliderMouseSensibility;
 
     void Start()
     {
@@ -27,5 +32,10 @@ public class MouseMovement : MonoBehaviour
 
         xRotation = Mathf.Clamp(xRotation, bottomClamp, topClamp);
         transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+    }
+
+    public void SetMouseSensibility()
+    {
+        mouseSensibility = mouseSensibilityDefault * sliderMouseSensibility.value;
     }
 }

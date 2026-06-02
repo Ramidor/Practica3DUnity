@@ -80,7 +80,6 @@ GameObject:
   - component: {fileID: 5599813144541775711}
   - component: {fileID: 7935972381712018679}
   - component: {fileID: 6831140286707069532}
-  - component: {fileID: 2860833718408929225}
   - component: {fileID: 4462224412697468549}
   - component: {fileID: 1777154516075899734}
   - component: {fileID: 908644811943611396}
@@ -144,6 +143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HP: 100
+  isDead: 0
   zombieWalking: {fileID: 8300000, guid: ebb96c703224744479e6294bd49515d9, type: 3}
   zombieDeath: {fileID: 8300000, guid: 9df77b70cadc8384ca073a95aebc666f, type: 3}
   zombieAttack: {fileID: 8300000, guid: bc2baab908f1b004691a6ecf7044f61c, type: 3}
@@ -151,18 +151,6 @@ MonoBehaviour:
   zombieChase: {fileID: 8300000, guid: e1e7f406c66d0c34f94726e83f3b5cbd, type: 3}
   zombieChannel: {fileID: 4602323219998414307}
   zombieChannel2: {fileID: 8125937322892788801}
---- !u!114 &2860833718408929225
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 578095770558955281}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b871066106e7f2441bb9d3094e26b1d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!195 &4462224412697468549
 NavMeshAgent:
   m_ObjectHideFlags: 0
