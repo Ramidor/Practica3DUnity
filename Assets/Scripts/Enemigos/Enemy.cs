@@ -43,6 +43,14 @@ public class Enemy : MonoBehaviour
              GetComponent<Collider>().enabled = false; // Desactiva el collider para evitar más colisiones
             isDead = true;
 
+            // Paramos el NavMeshAgent para que no siga deslizándose durante la animación de muerte
+            if (navAgent != null && navAgent.isOnNavMesh)
+            {
+                navAgent.velocity = Vector3.zero;
+                navAgent.isStopped = true;
+                navAgent.ResetPath();
+            }
+
             PuntuacionManager.instance.SumarPuntos(100f);
 
            

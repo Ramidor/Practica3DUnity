@@ -25,7 +25,12 @@ public class Player : MonoBehaviour
         }
         else
         {
-            playerChannel.PlayOneShot(playerHurtSound);
+            // Protegido: si el AudioSource o el clip no están asignados, no peta
+            // y la sangre se sigue mostrando igualmente.
+            if (playerChannel != null && playerHurtSound != null)
+            {
+                playerChannel.PlayOneShot(playerHurtSound);
+            }
             print("Has recibido " + daño + " puntos de daño. HP restante: " + HP);
             StartCoroutine(ShowBloodyScreenEffect());
         }
@@ -40,33 +45,34 @@ public class Player : MonoBehaviour
     }
     private IEnumerator ShowBloodyScreenEffect()
     {
-        if (bloodyScreenEffect.activeInHierarchy == false)
-        {
-            bloodyScreenEffect.SetActive(true);
-        }
-        var image = bloodyScreenEffect.GetComponent<Image>();
+        // --- LOGS DE DIAGNÓSTICO (quitar cuando funcione) ---
+        Debug.Log("[Sangre] Coroutine arrancada. bloodyScreenEffect = " + (bloodyScreenEffect != null ? bloodyScreenEffect.name : "NULL"));
 
-        Color startColor = image.color;
-        startColor.a = 1f;
-        image.color = startColor;
+        // Por si el objeto estuviera desactivado, lo activamos
+        bloodyScreenEffect.SetActive(true);
+
+        var image = bloodyScreenEffect.GetComponent<Image>();
+        Debug.Log("[Sangre] Image encontrada = " + (image != null) + " | activeInHierarchy = " + bloodyScreenEffect.activeInHierarchy);
+
+        // Empezamos opaco (rojo de sangre visible)
+        Color color = image.color;
+        color.a = 1f;
+        image.color = color;
+
         float duration = 3f;
         float elapsed = 0f;
         while (elapsed < duration)
         {
-
             float alpha = Mathf.Lerp(1f, 0f, elapsed / duration);
-            Color newColor = image.color;
-            newColor.a = alpha;
-            image.color = newColor;
+            color.a = alpha;
+            image.color = color;
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        if (bloodyScreenEffect.activeInHierarchy)
-        {
-
-            bloodyScreenEffect.SetActive(false);
-        }
+        // Aseguramos que queda totalmente transparente al final
+        color.a = 0f;
+        image.color = color;
     }
 
 }
